@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeployPilot — AI Deployment Intelligence</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0f;
+            color: #e4e4e7;
+            min-height: 100vh;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.5rem 2rem; border-bottom: 1px solid #27272a;
+        }
+        .logo { font-size: 1.5rem; font-weight: 700; color: #60a5fa; }
+        .logo span { color: #f97316; }
+        nav a { color: #a1a1aa; text-decoration: none; margin-left: 2rem; font-size: 0.9rem; }
+        nav a:hover { color: #e4e4e7; }
+        .hero {
+            text-align: center; padding: 4rem 2rem;
+        }
+        .hero h1 { font-size: 3rem; font-weight: 800; margin-bottom: 1rem; }
+        .hero h1 span { background: linear-gradient(135deg, #60a5fa, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.2rem; color: #a1a1aa; max-width: 600px; margin: 0 auto 2rem; }
+        .cta-buttons { display: flex; gap: 1rem; justify-content: center; }
+        .btn {
+            padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 600;
+            text-decoration: none; font-size: 1rem; cursor: pointer; border: none;
+        }
+        .btn-primary { background: #60a5fa; color: #0a0a0f; }
+        .btn-primary:hover { background: #93c5fd; }
+        .btn-secondary { background: #27272a; color: #e4e4e7; border: 1px solid #3f3f46; }
+        .btn-secondary:hover { background: #3f3f46; }
+        .features {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem; padding: 2rem 0;
+        }
+        .feature-card {
+            background: #18181b; border: 1px solid #27272a; border-radius: 0.75rem;
+            padding: 1.5rem; transition: border-color 0.2s;
+        }
+        .feature-card:hover { border-color: #60a5fa; }
+        .feature-card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .feature-card p { color: #a1a1aa; font-size: 0.9rem; line-height: 1.5; }
+        .feature-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+        .dashboard-preview {
+            background: #18181b; border: 1px solid #27272a; border-radius: 0.75rem;
+            padding: 2rem; margin: 2rem 0;
+        }
+        .preview-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .preview-header h2 { font-size: 1.25rem; }
+        .risk-bar {
+            height: 8px; border-radius: 4px; background: #27272a; overflow: hidden; margin: 0.5rem 0;
+        }
+        .risk-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
+        .risk-low { background: #22c55e; }
+        .risk-medium { background: #eab308; }
+        .risk-high { background: #ef4444; }
+        .pr-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .pr-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem; background: #0a0a0f; border-radius: 0.5rem; border: 1px solid #27272a;
+        }
+        .pr-info { display: flex; align-items: center; gap: 1rem; }
+        .pr-number { color: #60a5fa; font-weight: 600; font-size: 0.85rem; }
+        .pr-title { font-size: 0.95rem; }
+        .pr-author { color: #71717a; font-size: 0.8rem; }
+        .confidence-badge {
+            padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600;
+        }
+        .badge-high { background: #166534; color: #bbf7d0; }
+        .badge-medium { background: #854d0e; color: #fde68a; }
+        .badge-low { background: #991b1b; color: #fecaca; }
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 2rem 0; }
+        .stat-card {
+            background: #18181b; border: 1px solid #27272a; border-radius: 0.5rem;
+            padding: 1.25rem; text-align: center;
+        }
+        .stat-value { font-size: 2rem; font-weight: 700; color: #60a5fa; }
+        .stat-label { font-size: 0.8rem; color: #71717a; margin-top: 0.25rem; }
+        .demo-section { padding: 3rem 0; }
+        .demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem; }
+        .demo-input { display: flex; flex-direction: column; gap: 1rem; }
+        .demo-input label { font-size: 0.85rem; color: #a1a1aa; }
+        .demo-input input, .demo-input textarea, .demo-input select {
+            background: #0a0a0f; border: 1px solid #27272a; border-radius: 0.5rem;
+            padding: 0.75rem; color: #e4e4e7; font-size: 0.9rem; font-family: inherit;
+        }
+        .demo-input textarea { min-height: 150px; resize: vertical; }
+        .demo-output {
+            background: #0a0a0f; border: 1px solid #27272a; border-radius: 0.5rem;
+            padding: 1.5rem; min-height: 300px;
+        }
+        .demo-output h3 { margin-bottom: 1rem; font-size: 1rem; }
+        .output-content { font-family: 'SF Mono', Monaco, monospace; font-size: 0.85rem; line-height: 1.6; white-space: pre-wrap; }
+        footer {
+            text-align: center; padding: 3rem 2rem; color: #52525b; font-size: 0.85rem;
+            border-top: 1px solid #27272a; margin-top: 3rem;
+        }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .demo-grid { grid-template-columns: 1fr; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Deploy<span>Pilot</span></div>
+        <nav>
+            <a href="#features">Features</a>
+            <a href="#demo">Demo</a>
+            <a href="#pricing">Pricing</a>
+            <a href="/docs">API</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <section class="hero">
+            <h1>Ship with <span>Confidence</span></h1>
+            <p>AI-powered deployment intelligence that predicts CI failures before they happen, auto-remediates pipeline issues, and tells you exactly when it's safe to merge.</p>
+            <div class="cta-buttons">
+                <a href="/demo" class="btn btn-primary">Try Live Demo</a>
+                <a href="#features" class="btn btn-secondary">See How It Works</a>
+            </div>
+        </section>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value">30%</div>
+                <div class="stat-label">Merge failures</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">10h+</div>
+                <div class="stat-label">Wasted per dev/week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">50%</div>
+                <div class="stat-label">CI time wasted</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">0</div>
+                <div class="stat-label">Config needed</div>
+            </div>
+        </div>
+
+        <section id="features" class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🔮</div>
+                <h3>Predict Failures</h3>
+                <p>Our AI analyzes your code changes, CI history, and team patterns to predict failures before you push. No more waiting 20 minutes for CI to tell you what you could have known instantly.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔧</div>
+                <h3>Auto-Remediate</h3>
+                <p>DeployPilot automatically fixes lint errors, formatting issues, and common CI problems. One click to apply fixes directly to your PR branch.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Deploy Confidence</h3>
+                <p>Every PR gets a clear risk score and confidence level. No more guessing — know exactly when it's safe to merge and when you should wait.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Zero Config</h3>
+                <p>Install the GitHub App and get instant analysis. No YAML files, no pipeline changes, no learning curve. Works with any CI provider.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔗</div>
+                <h3>GitHub Native</h3>
+                <p>Analysis posted directly as PR comments. Status checks on your merge button. Works with your existing branch protection rules.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3>Security First</h3>
+                <p>Your code never leaves your infrastructure. DeployPilot analyzes logs and metadata, not source code. SOC 2 compliant from day one.</p>
+            </div>
+        </section>
+
+        <section id="demo" class="demo-section">
+            <h2 style="text-align: center; font-size: 2rem; margin-bottom: 0.5rem;">Try It Now</h2>
+            <p style="text-align: center; color: #a1a1aa; margin-bottom: 2rem;">Paste a CI log or describe your PR changes to see DeployPilot in action.</p>
+            
+            <div class="demo-grid">
+                <div class="demo-input">
+                    <label>Changed Files (comma-separated)</label>
+                    <input type="text" id="demoFiles" placeholder="src/auth.py, src/handler.py, tests/test_auth.py" value="src/auth.py, src/handler.py, tests/test_auth.py">
+                    
+                    <label>CI Log (paste from your CI run)</label>
+                    <textarea id="demoLog" placeholder="Paste CI log output here...">2026-09-14 10:23:45 [CI] Starting build for PR #42
+2026-09-14 10:23:51 src/handler.py:42:1: E302 expected 2 blank lines, found 1
+2026-09-14 10:23:51 src/handler.py:58:1: E501 line too long (120 > 79 characters)
+2026-09-14 10:24:03 tests/test_handler.py:42: FAIL
+2026-09-14 10:24:03 AssertionError: Expected status 200 but got 500</textarea>
+                    
+                    <label>Lines Changed</label>
+                    <input type="number" id="demoLines" value="150" min="0">
+                    
+                    <label>PR Title</label>
+                    <input type="text" id="demoTitle" value="Add user authentication">
+                    
+                    <button class="btn btn-primary" onclick="runAnalysis()" style="width: 100%;">Analyze PR</button>
+                </div>
+                
+                <div class="demo-output">
+                    <h3>Analysis Result</h3>
+                    <div class="output-content" id="demoResult">Click "Analyze PR" to see DeployPilot's analysis...</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="pricing" style="padding: 3rem 0;">
+            <h2 style="text-align: center; font-size: 2rem; margin-bottom: 2rem;">Simple Pricing</h2>
+            <div class="features">
+                <div class="feature-card" style="text-align: center;">
+                    <h3>Free</h3>
+                    <div style="font-size: 2.5rem; font-weight: 700; margin: 1rem 0;">$0</div>
+                    <p style="color: #71717a; margin-bottom: 1rem;">/month</p>
+                    <ul style="list-style: none; text-align: left; font-size: 0.9rem; color: #a1a1aa;">
+                        <li style="margin-bottom: 0.5rem;">✓ 100 PR analyses/month</li>
+                        <li style="margin-bottom: 0.5rem;">✓ Basic failure detection</li>
+                        <li style="margin-bottom: 0.5rem;">✓ GitHub PR comments</li>
+                        <li style="margin-bottom: 0.5rem;">✓ Community support</li>
+                    </ul>
+                </div>
+                <div class="feature-card" style="text-align: center; border-color: #60a5fa;">
+                    <h3>Pro</h3>
+                    <div style="font-size: 2.5rem; font-weight: 700; margin: 1rem 0;">$29</div>
+                    <p style="color: #71717a; margin-bottom: 1rem;">/repo/month</p>
+                    <ul style="list-style: none; text-align: left; font-size: 0.9rem; color: #a1a1aa;">
+                        <li style="margin-bottom: 0.5rem;">✓ Unlimited analyses</li>
+                        <li style="margin-bottom: 0.5rem;">✓ Auto-remediation</li>
+                        <li style="margin-bottom: 0.5rem;">✓ Failure prediction</li>
+                        <li style="margin-bottom: 0.5rem;">✓ Priority support</li>
+                        <li style="margin-bottom: 0.5rem;">✓ Slack integration</li>
+                    </ul>
+                </div>
+                <div class="feature-card" style="text-align: center;">
+                    <h3>Enterprise</h3>
+                    <div style="font-size: 2.5rem; font-weight: 700; margin: 1rem 0;">Custom</div>
+                    <p style="color: #71717a; margin-bottom: 1rem;">self-hosted</p>
+                    <ul style="list-style: none; text-align: left; font-size: 0.9rem; color: #a1a1aa;">
+                        <li style="margin-bottom: 0.5rem;">✓ On-premise deployment</li>
+                        <li style="margin-bottom: 0.5rem;">✓ SSO/SAML</li>
+                        <li style="margin-bottom: 0.5rem;">✓ Custom ML models</li>
+                        <li style="margin-bottom: 0.5rem;">✓ SLA guarantee</li>
+                        <li style="margin-bottom: 0.5rem;">✓ Dedicated support</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>DeployPilot — AI-powered deployment intelligence.</p>
+            <p style="margin-top: 0.5rem;">Built with ❤️ for developers who ship.</p>
+        </footer>
+    </div>
+
+    <script>
+        async function runAnalysis() {
+            const files = document.getElementById('demoFiles').value.split(',').map(f => f.trim()).filter(f => f);
+            const log = document.getElementById('demoLog').value;
+            const lines = parseInt(document.getElementById('demoLines').value) || 0;
+            const title = document.getElementById('demoTitle').value;
+            const hasTests = files.some(f => f.includes('test') || f.includes('spec'));
+            
+            const resultEl = document.getElementById('demoResult');
+            resultEl.textContent = 'Analyzing...';
+            
+            try {
+                const resp = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        pr_number: 1,
+                        title: title,
+                        author: 'demo-user',
+                        changed_files: files,
+                        ci_log: log,
+                        lines_changed: lines,
+                        has_tests: hasTests,
+                    }),
+                });
+                const data = await resp.json();
+                
+                const riskBar = '█' + '█'.repeat(Math.floor(data.risk_score * 20)) + '░'.repeat(20 - Math.floor(data.risk_score * 20));
+                const riskColor = data.risk_score < 0.25 ? '#22c55e' : data.risk_score < 0.6 ? '#eab308' : '#ef4444';
+                
+                let output = `Risk Score: ${riskBar} ${Math.round(data.risk_score * 100)}%\n`;
+                output += `Confidence: ${data.confidence.toUpperCase()}\n`;
+                output += `Recommendation: ${data.recommendation}\n\n`;
+                
+                if (data.ci_failures && data.ci_failures.length > 0) {
+                    output += `CI Failures (${data.ci_failures.length}):\n`;
+                    data.ci_failures.forEach(f => {
+                        const icon = f.auto_fixable ? '🔧' : '🔴';
+                        output += `  ${icon} ${f.error.substring(0, 70)}\n`;
+                        if (f.remediation) output += `     → ${f.remediation}\n`;
+                    });
+                    output += '\n';
+                }
+                
+                if (data.warnings && data.warnings.length > 0) {
+                    output += `Warnings:\n`;
+                    data.warnings.forEach(w => {
+                        output += `  ⚠️  ${w}\n`;
+                    });
+                }
+                
+                resultEl.innerHTML = `<span style="color: ${riskColor}">${output.replace(/\n/g, '<br>')}</span>`;
+            } catch (e) {
+                resultEl.textContent = 'Error: ' + e.message;
+            }
+        }
+    </script>
+</body>
+</html>

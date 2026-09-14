@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Sample CI log for testing
+cat << 'EOF'
+2026-09-14 10:23:45 [CI] Starting build for PR #42
+2026-09-14 10:23:46 [Step] Installing dependencies
+2026-09-14 10:23:50 [Step] Running linter
+2026-09-14 10:23:51 src/handler.py:42:1: E302 expected 2 blank lines, found 1
+2026-09-14 10:23:51 src/handler.py:58:1: E501 line too long (120 > 79 characters)
+2026-09-14 10:23:51 src/utils.py:15:1: F401 'os' imported but unused
+2026-09-14 10:23:51 [Step] Running tests
+2026-09-14 10:24:03 tests/test_handler.py:42: FAIL 
+2026-09-14 10:24:03 AssertionError: Expected status 200 but got 500
+2026-09-14 10:24:03 [Step] Building Docker image
+2026-09-14 10:24:15 Error: failed to pull image python:3.13-slim
+EOF

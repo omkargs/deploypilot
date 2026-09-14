@@ -1,0 +1,10 @@
+pyproject.toml
+deploypilot/__init__.py
+deploypilot/cli.py
+deploypilot/engine.py
+deploypilot.egg-info/PKG-INFO
+deploypilot.egg-info/SOURCES.txt
+deploypilot.egg-info/dependency_links.txt
+deploypilot.egg-info/entry_points.txt
+deploypilot.egg-info/requires.txt
+deploypilot.egg-info/top_level.txt
