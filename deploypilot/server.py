@@ -13,7 +13,10 @@ from fastapi.responses import HTMLResponse, JSONResponse
 
 from deploypilot.engine import DeployPilot
 
-app = FastAPI(title="DeployPilot", version="0.1.0")
+app = FastAPI(title="DeployPilot", version="0.2.0")
+
+BASE_DIR = Path(__file__).parent
+TEMPLATE_DIR = BASE_DIR / "templates"
 
 pr_analyses: dict[int, Any] = {}
 ci_history: list[dict[str, Any]] = []
@@ -26,15 +29,18 @@ def verify_github_signature(payload: bytes, signature: str, secret: str) -> bool
     return hmac.compare_digest(expected, signature)
 
 
+def render_template(name: str) -> str:
+    return (TEMPLATE_DIR / name).read_text()
+
+
 @app.get("/", response_class=HTMLResponse)
-async def dashboard():
-    html_path = Path(__file__).parent / "templates" / "dashboard.html"
-    return HTMLResponse(content=html_path.read_text())
+async def index():
+    return HTMLResponse(content=render_template("index.html"))
 
 
 @app.get("/health")
 async def health():
-    return {"status": "ok", "version": "0.1.0", "analyses": len(pr_analyses)}
+    return {"status": "ok", "version": "0.2.0", "analyses": len(pr_analyses)}
 
 
 @app.get("/api/analyses")
@@ -61,6 +67,8 @@ async def analyze_pr_api(request: Request):
         author=data.get("author", "unknown"),
         changed_files=data.get("changed_files", []),
         ci_log=data.get("ci_log"),
+        ci_config_text=data.get("ci_config"),
+        ci_config_type=data.get("ci_config_type", "github_actions"),
         lines_changed=data.get("lines_changed", 0),
         has_tests=data.get("has_tests", False),
         is_draft=data.get("is_draft", False),
@@ -76,26 +84,17 @@ async def analyze_pr_api(request: Request):
         "recommendation": analysis.recommendation,
         "warnings": analysis.warnings,
         "ci_failures": [
-            {"error": f.error_message, "remediation": f.remediation, "auto_fixable": f.auto_fixable}
+            {"error": f.error_message, "category": f.category, "auto_fixable": f.auto_fixable}
             for f in analysis.ci_failures
         ],
+        "config_issues": [
+            {"issue": i.issue, "severity": i.severity, "suggestion": i.suggestion}
+            for i in analysis.config_issues
+        ],
+        "stats": analysis.stats,
     }
 
-    return {
-        "pr_number": analysis.pr_number,
-        "risk_score": analysis.risk_score,
-        "confidence": analysis.confidence.value,
-        "recommendation": analysis.recommendation,
-        "ci_failures": [
-            {
-                "error": f.error_message,
-                "remediation": f.remediation,
-                "auto_fixable": f.auto_fixable,
-            }
-            for f in analysis.ci_failures
-        ],
-        "warnings": analysis.warnings,
-    }
+    return pr_analyses[analysis.pr_number]
 
 
 @app.post("/webhook/github")

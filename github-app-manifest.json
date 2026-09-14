@@ -1,0 +1,25 @@
+{
+  "name": "DeployPilot",
+  "url": "https://github.com/omkargs/deploypilot",
+  "description": "AI-powered deployment intelligence. Predict CI failures before they happen, auto-remediate pipelines, and ship with confidence.",
+  "public": true,
+  "redirect_url": "https://github.com/omkargs/deploypilot",
+  "setup_url": "https://github.com/omkargs/deploypilot",
+  "hook_attributes": {
+    "url": "https://your-deploypilot-instance.com/webhook/github",
+    "active": true
+  },
+  "url": "https://github.com/omkargs/deploypilot",
+  "default_events": [
+    "pull_request",
+    "check_run",
+    "push"
+  ],
+  "default_permissions": {
+    "checks": "write",
+    "contents": "read",
+    "metadata": "read",
+    "pull_requests": "write",
+    "statuses": "write"
+  }
+}
