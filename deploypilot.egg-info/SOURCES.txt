@@ -1,6 +1,8 @@
 README.md
 pyproject.toml
 deploypilot/__init__.py
+deploypilot/analytics.py
+deploypilot/auth.py
 deploypilot/cli.py
 deploypilot/database.py
 deploypilot/engine.py
