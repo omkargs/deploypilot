@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  deploypilot:
+    image: ghcr.io/omkargs/deploypilot:latest
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///data/deploypilot.db
+      - GITHUB_WEBHOOK_SECRET=${GITHUB_WEBHOOK_SECRET:-deploypilot-dev-secret}
+    volumes:
+      - deploypilot-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  deploypilot-data:
